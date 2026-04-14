@@ -82,7 +82,7 @@ if analyze_btn:
                     with col_avatar:
                         avatar_url = data["extracted_data"].get("avatar_url")
                         if avatar_url:
-                            st.image(avatar_url, width=100, use_column_width=False)
+                            st.image(avatar_url, width=100, use_container_width=False)
                         else:
                             st.markdown("👤")
 
@@ -105,6 +105,11 @@ if analyze_btn:
                     st.subheader("💡 Mentor Feedback")
                     st.markdown(f'<div class="review-card">{data["mentor_feedback"]}</div>', unsafe_allow_html=True)
                     
+                    st.divider()
+                    col_link, _ = st.columns([1, 2])
+                    with col_link:
+                        st.link_button("View GitHub Profile", f"https://github.com/{username}", type="secondary")
+
                     st.subheader("📁 Recent Projects")
                     repos = data["extracted_data"].get("recent_repos", [])
                     st.write(", ".join(repos) if repos else "No recent repositories found.")
