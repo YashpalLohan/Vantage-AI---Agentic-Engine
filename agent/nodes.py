@@ -28,6 +28,7 @@ def extract_github_data(state: ReviewState):
             languages = list(set([repo["language"] for repo in repos_data if repo["language"]]))
             
             real_data = {
+                "avatar_url": user_resp.json().get("avatar_url"),
                 "recent_repos": repo_names,
                 "primary_languages": languages,
                 "public_repos_count": user_resp.json().get("public_repos", 0)
