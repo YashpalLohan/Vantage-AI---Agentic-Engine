@@ -25,13 +25,18 @@ def extract_github_data(state: ReviewState):
         if user_resp.status_code == 200 and repos_resp.status_code == 200:
             repos_data = repos_resp.json()
             repo_names = [repo["name"] for repo in repos_data]
+            total_stars = sum([repo.get("stargazers_count", 0) for repo in repos_data])
             languages = list(set([repo["language"] for repo in repos_data if repo["language"]]))
             
+            user_data = user_resp.json()
             real_data = {
-                "avatar_url": user_resp.json().get("avatar_url"),
+                "avatar_url": user_data.get("avatar_url"),
+                "bio": user_data.get("bio", "No bio available"),
+                "followers": user_data.get("followers", 0),
+                "total_stars": total_stars,
                 "recent_repos": repo_names,
                 "primary_languages": languages,
-                "public_repos_count": user_resp.json().get("public_repos", 0)
+                "public_repos_count": user_data.get("public_repos", 0)
             }
             return {"github_data": real_data}
         else:

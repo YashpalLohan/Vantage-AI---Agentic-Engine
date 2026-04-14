@@ -76,22 +76,32 @@ if analyze_btn:
                     data = response.json()
                     st.success("Analysis Complete!")
                     
-                    # Portfolio Data Section
-                    col_avatar, col1, col2 = st.columns([1, 1, 2])
-                    
+                    # Header with Bio
+                    col_avatar, col_info = st.columns([1, 4])
                     with col_avatar:
                         avatar_url = data["extracted_data"].get("avatar_url")
                         if avatar_url:
-                            st.image(avatar_url, width=100, use_container_width=False)
-                        else:
-                            st.markdown("👤")
+                            st.image(avatar_url, width=120, use_container_width=False)
+                    with col_info:
+                        st.subheader(f"👋 {username}")
+                        st.write(data["extracted_data"].get("bio", "No bio available"))
+                        st.link_button("✨ View GitHub Profile", f"https://github.com/{username}", type="secondary")
 
-                    with col1:
-                        st.subheader("📊 Stats")
-                        st.metric("Public Repos", data["extracted_data"].get("public_repos_count", 0))
+                    st.markdown("---")
+
+                    # Organized Tabs
+                    tab1, tab2, tab3 = st.tabs(["📊 Dashboard", "💡 Mentor Feedback", "📂 Portfolio Projects"])
+
+                    with tab1:
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Public Repos", data["extracted_data"].get("public_repos_count", 0))
+                        with col2:
+                            st.metric("Followers", data["extracted_data"].get("followers", 0))
+                        with col3:
+                            st.metric("Top Repo Stars", data["extracted_data"].get("total_stars", 0))
                         
-                    with col2:
-                        st.subheader("💻 Languages")
+                        st.subheader("🛠️ Technical Stack")
                         langs = data["extracted_data"].get("primary_languages", [])
                         if langs:
                             for lang in langs:
@@ -99,20 +109,23 @@ if analyze_btn:
                         else:
                             st.write("No specific languages detected.")
 
-                    st.markdown("---")
-                    
-                    # Feedback Section
-                    st.subheader("💡 Mentor Feedback")
-                    st.markdown(f'<div class="review-card">{data["mentor_feedback"]}</div>', unsafe_allow_html=True)
-                    
-                    st.divider()
-                    col_link, _ = st.columns([1, 2])
-                    with col_link:
-                        st.link_button("View GitHub Profile", f"https://github.com/{username}", type="secondary")
+                    with tab2:
+                        st.markdown(f'<div class="review-card">{data["mentor_feedback"]}</div>', unsafe_allow_html=True)
+                        st.download_button(
+                            label="📥 Download Feedback",
+                            data=data["mentor_feedback"],
+                            file_name=f"{username}_mentor_review.txt",
+                            mime="text/plain",
+                        )
 
-                    st.subheader("📁 Recent Projects")
-                    repos = data["extracted_data"].get("recent_repos", [])
-                    st.write(", ".join(repos) if repos else "No recent repositories found.")
+                    with tab3:
+                        st.subheader("Recent Project Highlights")
+                        repos = data["extracted_data"].get("recent_repos", [])
+                        for repo in repos:
+                            st.markdown(f"**🔗 {repo}**")
+                            # Add a link if possible (approximated)
+                            st.write(f"Check it out at: github.com/{username}/{repo}")
+                            st.divider()
 
                 else:
                     st.error(f"Backend Error: {response.status_code}")
