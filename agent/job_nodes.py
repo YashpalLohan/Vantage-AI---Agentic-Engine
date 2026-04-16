@@ -141,7 +141,7 @@ def rank_and_match(state: JobState):
                 "role_breakdown": [],
                 "skill_gaps": [],
                 "certifications": [],
-                "insights": [{"icon": "◈", "label": "No Data", "text": "No jobs found to analyze."}]
+                "insights": [{"icon": "", "label": "No Data", "text": "No jobs found to analyze."}]
             }
         }
         

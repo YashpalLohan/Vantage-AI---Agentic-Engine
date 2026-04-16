@@ -7,7 +7,7 @@ def fetch_jobs_v3(file_bytes, file_name, loc, sal, refresh_id=0, seen_urls=""):
     res = requests.post("http://127.0.0.1:8000/find-jobs", files={"file": (file_name, file_bytes, "application/pdf")}, params=params)
     return res.status_code, res.text, res.json() if res.status_code == 200 else None
 
-st.set_page_config(page_title="Vantage AI", page_icon="◈", layout="centered")
+st.set_page_config(page_title="Vantage AI", page_icon="", layout="centered")
 
 st.markdown("""
 <style>
@@ -160,9 +160,9 @@ def render_hero():
 def render_progress(stage: int):
     steps_html = f"""
     <div class='steps'>
-        <div class='step {"active" if stage == 1 else "done"}'>01 Upload{"" if stage == 1 else " ✓"}</div>
+        <div class='step {"active" if stage == 1 else "done"}'>01 Upload{"" if stage == 1 else " (Done)"}</div>
         <div class='step-line'></div>
-        <div class='step {"active" if stage == 2 else ("done" if stage > 2 else "")}'>02 Prefs{"" if stage <= 2 else " ✓"}</div>
+        <div class='step {"active" if stage == 2 else ("done" if stage > 2 else "")}'>02 Prefs{"" if stage <= 2 else " (Done)"}</div>
         <div class='step-line'></div>
         <div class='step {"active" if stage == 3 else ""}'>03 Map</div>
     </div>
@@ -190,7 +190,7 @@ if 'active_map_id' not in st.session_state:
 # Sidebar for History
 with st.sidebar:
     st.markdown("<div style='padding-top: 1rem;'>", unsafe_allow_html=True)
-    st.markdown("<h3 style='color: #3b82f6;'>◈ Vantage Archive</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #3b82f6;'>Vantage Archive</h3>", unsafe_allow_html=True)
     if not st.session_state['history']:
         st.markdown("<p style='font-size: 13px; color: #71717a;'>No previous maps saved yet.</p>", unsafe_allow_html=True)
     else:
@@ -246,7 +246,7 @@ if 'results' not in st.session_state:
         work = st.selectbox("Employment", ["Any", "Full-time", "Contract", "Hybrid"])
         st.markdown("</div>", unsafe_allow_html=True)
 
-    if st.button("Generate Career Map ➔", use_container_width=True):
+    if st.button("Generate Career Map", use_container_width=True):
         if uploaded_file:
             with st.spinner("Agents scanning India's tech market..."):
                 try:
@@ -293,7 +293,7 @@ else:
     c_back, c_refresh = st.columns([5, 1.2])
     with c_back:
         st.markdown("<div class='reset-btn'>", unsafe_allow_html=True)
-        if st.button("← Back"):
+        if st.button("Back"):
             if 'results' in st.session_state:
                 del st.session_state['results']
             if 'job_limit' in st.session_state:
@@ -303,7 +303,7 @@ else:
         st.markdown("</div>", unsafe_allow_html=True)
     with c_refresh:
         st.markdown("<div class='reset-btn'>", unsafe_allow_html=True)
-        if st.button("🔄 Refresh"):
+        if st.button("Refresh"):
             st.session_state['refresh_count'] += 1
             # Re-fetch with new refresh_id
             with st.spinner("Refreshing..."):
@@ -385,18 +385,18 @@ else:
                     <span class='job-num' style='margin-right: 14px;'>{i:02}</span>
                     <div class='job-info'>
                         <div class='job-title-text'>{job['title']}</div>
-                        <div class='job-co'>🏢 {job.get('company', 'Direct Role')} &nbsp;•&nbsp; 🌐 {job.get('platform', 'Corporate Platform')}</div>
+                        <div class='job-co'>Company: {job.get('company', 'Direct Role')} &nbsp;•&nbsp; Source: {job.get('platform', 'Corporate Platform')}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
             with col2:
                 # Single button full width
-                st.markdown(f"<div style='margin-top: 8px;'><a href='{url}' target='_blank' class='job-badge' style='text-decoration:none; display:inline-block; width:100%; text-align:center; background:#1e3a8a; border-color:#1e40af;'>Apply Now ↗</a></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='margin-top: 8px;'><a href='{url}' target='_blank' class='job-badge' style='text-decoration:none; display:inline-block; width:100%; text-align:center; background:#1e3a8a; border-color:#1e40af;'>Apply Now</a></div>", unsafe_allow_html=True)
             st.markdown("<hr style='margin: 8px 0; border-color: #27272a;'>", unsafe_allow_html=True)
 
         if st.session_state['job_limit'] < len(jobs_found):
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button(f"Load More Jobs ({len(jobs_found) - st.session_state['job_limit']} remaining) ↓", key="load_more_jobs"):
+            if st.button(f"Load More Jobs ({len(jobs_found) - st.session_state['job_limit']} remaining)", key="load_more_jobs"):
                 st.session_state['job_limit'] += 10
                 st.rerun()
 
