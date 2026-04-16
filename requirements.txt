@@ -6,3 +6,8 @@ langchain-groq
 python-dotenv
 streamlit
 requests
+pypdf
+tavily-python
+python-multipart
+pandas  
+ 

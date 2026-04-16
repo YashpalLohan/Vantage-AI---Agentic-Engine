@@ -1,7 +1,11 @@
-from typing import TypedDict
+from typing import TypedDict, List, Dict, Optional, Any
 
-# This defines the data our agents will pass to each other
-class ReviewState(TypedDict):
-    username: str
-    github_data: dict  
-    feedback: str
+# This defines the data for our Job Searcher
+class JobState(TypedDict):
+    resume_text: str
+    location: str
+    min_salary: Optional[str]
+    extract_data: Dict
+    jobs: List[Dict]
+    final_report: Any
+    
